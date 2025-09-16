@@ -28,7 +28,6 @@ def df_to_excel_bytes(df):
 # --- CONEXÃO COM GOOGLE SHEETS ---
 @st.cache_resource
 def connect_to_google_sheets():
-    # ... (código de conexão igual) ...
     scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     try:
         creds_dict = st.secrets["gcp_service_account"]
@@ -47,7 +46,6 @@ gsheets_client = connect_to_google_sheets()
 
 @st.cache_data(ttl=60)
 def load_data(sheet_id, sheet_name):
-    # ... (código de carregar dados igual) ...
     try:
         spreadsheet = gsheets_client.open_by_key(sheet_id)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -70,7 +68,6 @@ def load_data(sheet_id, sheet_name):
 
 
 def update_sheet_from_df(sheet_id, sheet_name, dataframe):
-    # ... (código de atualizar dados igual) ...
     try:
         spreadsheet = gsheets_client.open_by_key(sheet_id)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -83,7 +80,6 @@ def update_sheet_from_df(sheet_id, sheet_name, dataframe):
 
 
 def append_row_to_sheet(sheet_id, sheet_name, row_list):
-    # ... (código de adicionar linha igual) ...
     try:
         spreadsheet = gsheets_client.open_by_key(sheet_id)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -98,7 +94,7 @@ def append_row_to_sheet(sheet_id, sheet_name, row_list):
 def inject_dark_theme_styles():
     st.markdown("""
     <style>
-        /* ... (CSS completo e sem alterações) ... */
+        /* ... (CSS completo) ... */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
         body, .stApp { background-color: #121212 !important; color: #FFFFFF !important; font-family: 'Montserrat', sans-serif; }
         header[data-testid="stHeader"] { display: none !important; }
@@ -122,64 +118,6 @@ def inject_dark_theme_styles():
 
 # --- CALLBACKS ---
 def start_quiz():
-    # ... (código do start_quiz igual) ...
-    pass
-
-
-# --- FUNÇÕES DE ADMIN ---
-def show_admin_panel():
-    # ... (código do show_admin_panel igual) ...
-    pass
-
-
-def show_qrcode_generator():
-    # ... (código do show_qrcode_generator igual) ...
-    pass
-
-
-# --- FUNÇÕES DE TELA ---
-def show_home():
-    # ... (código da tela home com pequena alteração no login) ...
-    pass
-
-
-def show_quiz():
-    # ... (código da tela de quiz igual) ...
-    pass
-
-
-def show_end_screen():
-    # ... (código da tela final igual) ...
-    pass
-
-
-# --- NOVA FUNÇÃO: TELA DE ADMIN ---
-def show_admin_screen():
-    st.title("🔑 Painel de Administração")
-    st.markdown("---")
-
-    # Botão para voltar para a tela inicial do quiz sem deslogar
-    if st.button("⬅️ Voltar para a Tela Inicial do Quiz"):
-        st.session_state.screen = 'home'
-        st.rerun()
-
-    st.markdown("---")
-
-    # Exibe as ferramentas de admin
-    show_admin_panel()
-    st.markdown("---")
-    show_qrcode_generator()
-
-    st.markdown("---")
-    st.error("A ação de sair irá desconectar sua sessão de administrador.")
-    if st.button("Sair do modo Admin"):
-        st.session_state.is_admin = False
-        st.session_state.screen = 'home'
-        st.rerun()
-
-
-# --- RE-IMPLEMENTAÇÃO COMPLETA DAS FUNÇÕES PARA CLAREZA ---
-def start_quiz():
     name = st.session_state.player_name_input
     if name:
         st.session_state.player_name = name.strip()
@@ -199,6 +137,7 @@ def start_quiz():
         st.warning("Por favor, digite seu nome.")
 
 
+# --- FUNÇÕES DE ADMIN ---
 def show_admin_panel():
     st.header("Gerenciar Perguntas")
     with st.expander("⬆️ Upload (CSV/Excel)"):
@@ -241,15 +180,17 @@ def show_qrcode_generator():
     st.header("Gerador de QR Code")
     app_url = st.text_input("Cole a URL do aplicativo aqui:")
     if app_url:
-        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr = qrcode.QRCode(box_size=10, border=4)
         qr.add_data(app_url)
         qr.make(fit=True)
-        img = qr.make_image(fill_color="white", back_color="transparent")
+        # CORREÇÃO AQUI: Invertemos as cores para o padrão universal (preto no branco)
+        img = qr.make_image(fill_color="black", back_color="white")
         buf = BytesIO()
         img.save(buf, format='PNG')
         st.image(buf, caption="Escaneie para acessar o quiz!")
 
 
+# --- FUNÇÕES DE TELA ---
 def show_home():
     st.title("git add ."
              " Radar de Risco 🚧")
@@ -270,7 +211,7 @@ def show_home():
 
             if admin_password == correct_password:
                 st.session_state.is_admin = True
-                st.session_state.screen = 'admin'  # MUDANÇA: Redireciona para a tela de admin
+                st.session_state.screen = 'admin'
                 st.success("Login bem-sucedido! Redirecionando...")
                 time.sleep(1.5)
                 st.rerun()
@@ -378,33 +319,45 @@ def show_end_screen():
         st.rerun()
 
 
-# --- FUNÇÃO PRINCIPAL (ROTEADOR DE TELAS) ---
+def show_admin_screen():
+    st.title("🔑 Painel de Administração")
+    st.markdown("---")
+    if st.button("⬅️ Voltar para a Tela Inicial do Quiz"):
+        st.session_state.screen = 'home'
+        st.rerun()
+    st.markdown("---")
+    show_admin_panel()
+    st.markdown("---")
+    show_qrcode_generator()
+    st.markdown("---")
+    st.error("A ação de sair irá desconectar sua sessão de administrador.")
+    if st.button("Sair do modo Admin"):
+        st.session_state.is_admin = False
+        st.session_state.screen = 'home'
+        st.rerun()
+
+
+# --- FUNÇÃO PRINCIPAL ---
 def main():
     inject_dark_theme_styles()
 
-    # Roteador de telas principal
-    # Adicionamos a nova tela 'admin' ao roteador
+    current_screen = st.session_state.get('screen', 'home')
+    if current_screen == 'admin' and not st.session_state.get('is_admin', False):
+        st.warning("Acesso negado. Por favor, faça o login como administrador.")
+        st.session_state.screen = 'home'
+
     screen_functions = {
         'home': show_home,
         'quiz': show_quiz,
         'end': show_end_screen,
         'admin': show_admin_screen
     }
-
-    # Proteção: se o usuário tentar acessar a tela de admin sem estar logado, volta para home
-    current_screen = st.session_state.get('screen', 'home')
-    if current_screen == 'admin' and not st.session_state.get('is_admin', False):
-        st.warning("Acesso negado. Por favor, faça o login como administrador.")
-        st.session_state.screen = 'home'
-
-    # Executa a função da tela atual
-    screen_to_show = screen_functions.get(st.session_state.screen)
+    screen_to_show = screen_functions.get(st.session_state.screen, show_home)
     if screen_to_show:
         screen_to_show()
 
 
 if __name__ == "__main__":
-    # Ponto único e seguro de inicialização da sessão
     if 'initialized' not in st.session_state:
         st.session_state.initialized = True
         st.session_state.screen = 'home'
