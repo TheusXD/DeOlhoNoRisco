@@ -192,7 +192,7 @@ def show_qrcode_generator():
 
 # --- FUNÇÕES DE TELA ---
 def show_home():
-    st.title("git add ."
+    st.title("🚧"
              " Radar de Risco 🚧")
     st.write("Seu radar para perigos está calibrado? Ative seus sentidos e prove que nada escapa do seu olhar atento!")
     tab_player, tab_admin = st.tabs(["👤 Jogar Quiz", "🔑 Administrador"])
