@@ -9,7 +9,7 @@ import time
 from streamlit_autorefresh import st_autorefresh
 
 # --- CONFIGURAÇÕES DA PÁGINA ---
-st.set_page_config(page_title="Radar de Risco", page_icon="📡", layout="centered")
+st.set_page_config(page_title="Radar de Risco", page_icon="🏆", layout="centered")
 
 # --- CONFIGURAÇÕES E CONSTANTES ---
 QUESTION_TIMER = 30
@@ -251,7 +251,8 @@ def show_qrcode_generator():
 
 
 def show_home():
-    st.title("📡 Radar de Risco 🚧")
+    st.title("git add ."
+             " Radar de Risco 🚧")
     st.write("Seu radar para perigos está calibrado? Ative seus sentidos e prove que nada escapa do seu olhar atento!")
     tab_player, tab_admin = st.tabs(["👤 Jogar Quiz", "🔑 Administrador"])
     with tab_player:
