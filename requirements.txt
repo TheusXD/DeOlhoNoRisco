@@ -1,0 +1,9 @@
+streamlit
+gspread
+oauth2client
+pandas
+qrcode
+Pillow
+fpdf2
+streamlit-autorefresh
+openpyxl

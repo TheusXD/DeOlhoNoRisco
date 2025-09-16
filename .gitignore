@@ -1,0 +1,5 @@
+# Ignorar arquivos de credenciais do Google
+google_sheets_credentials.json.json
+
+# Ignorar a pasta do ambiente virtual (boas práticas)
+.venv/
