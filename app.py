@@ -81,18 +81,28 @@ def inject_custom_styles():
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        /* RESET E CONFIGURAÇÕES GERAIS COM MAIOR ESPECIFICIDADE */
-        body .stApp { 
+        /* ================================
+           RESET E FUNDO PRINCIPAL
+        ================================= */
+        html, body, .stApp {
+            background-color: #064e3b !important; /* Cor base sólida */
             background: 
                 radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
                 linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
             font-family: 'Inter', sans-serif !important;
-            min-height: 100vh;
-            position: relative;
+            min-height: 100vh !important;
+            position: relative !important;
         }
 
-        /* TEXTURA DE SEGURANÇA */
+        /* Evitar que containers internos fiquem com fundo sólido */
+        .block-container {
+            background: transparent !important;
+        }
+
+        /* ================================
+           TEXTURA SOBRE O FUNDO
+        ================================= */
         body .stApp::before {
             content: '';
             position: fixed;
@@ -105,20 +115,24 @@ def inject_custom_styles():
                     45deg,
                     transparent,
                     transparent 50px,
-                    rgba(255, 255, 255, 0.02) 50px,
-                    rgba(255, 255, 255, 0.02) 52px
+                    rgba(255, 255, 255, 0.015) 50px,
+                    rgba(255, 255, 255, 0.015) 52px
                 ) !important;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* ESCONDER ELEMENTOS DESNECESSÁRIOS */
+        /* ================================
+           ESCONDER ELEMENTOS PADRÃO
+        ================================= */
         header[data-testid="stHeader"] { display: none !important; }
         .stDeployButton { display: none !important; }
         #MainMenu { visibility: hidden !important; }
         footer { visibility: hidden !important; }
 
-        /* CONTAINER PRINCIPAL */
+        /* ================================
+           CONTAINER PRINCIPAL
+        ================================= */
         .main-container {
             padding: 1rem 2.5rem 2.5rem 2.5rem;
             max-width: 900px;
@@ -127,7 +141,7 @@ def inject_custom_styles():
             z-index: 1;
         }
 
-        /* TIPOGRAFIA - REGRA MAIS FORTE PARA GARANTIR A COR */
+        /* TIPOGRAFIA */
         .main-container h1, .main-container h2, .main-container h3, 
         .main-container p, .main-container div, .main-container li, .main-container label {
             color: white !important;
@@ -145,7 +159,9 @@ def inject_custom_styles():
             text-align: center;
         }
 
-        /* HEADER DO QUIZ - BANNER SIPAT */
+        /* ================================
+           HEADER DO QUIZ - BANNER SIPAT
+        ================================= */
         .quiz-header {
             background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
             padding: 2.5rem 2rem;
@@ -160,7 +176,7 @@ def inject_custom_styles():
             overflow: hidden;
         }
 
-        /* EFEITO DE BRILHO NO HEADER */
+        /* Efeito de brilho no header */
         .quiz-header::before {
             content: '';
             position: absolute;
@@ -188,7 +204,7 @@ def inject_custom_styles():
             z-index: 2;
         }
 
-        /* TÍTULO SIPAT */
+        /* Título SIPAT */
         .sipat-title {
             font-size: 1.8rem !important;
             font-weight: 700 !important;
@@ -198,7 +214,7 @@ def inject_custom_styles():
             color: #fbbf24 !important;
         }
 
-        /* TÍTULO PRINCIPAL */
+        /* Título Principal */
         .main-title {
             font-size: 2.5rem !important;
             font-weight: 800 !important;
@@ -208,7 +224,7 @@ def inject_custom_styles():
             letter-spacing: 2px;
         }
 
-        /* SUBTÍTULO */
+        /* Subtítulo */
         .subtitle {
             font-size: 1.2rem !important;
             font-weight: 500 !important;
@@ -217,7 +233,9 @@ def inject_custom_styles():
             line-height: 1.6;
         }
 
-        /* ABAS ESTILO SIPAT */
+        /* ================================
+           ABAS DO QUIZ
+        ================================= */
         .stTabs [data-baseweb="tab-list"] { 
             justify-content: center !important; 
             border-bottom: 3px solid rgba(16, 185, 129, 0.3) !important;
@@ -238,7 +256,9 @@ def inject_custom_styles():
             font-weight: 700 !important;
         }
 
-        /* BOTÕES PRINCIPAIS COM BRILHO */
+        /* ================================
+           BOTÕES
+        ================================= */
         div.stButton > button, div.stDownloadButton > button {
             color: white !important;
             font-weight: 700 !important;
@@ -246,9 +266,22 @@ def inject_custom_styles():
             padding: 1rem 2.5rem !important;
             font-size: 18px !important;
             border: none !important;
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* BOTÃO DESABILITADO */
+        div.stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        div.stButton > button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Botão desabilitado */
         div.stButton > button:disabled {
             background: #94a3b8 !important;
             color: #e2e8f0 !important;
@@ -257,7 +290,9 @@ def inject_custom_styles():
             opacity: 0.7 !important;
         }
 
-        /* INPUTS ESTILIZADOS */
+        /* ================================
+           INPUTS
+        ================================= */
         .stTextInput input {
             background: rgba(255, 255, 255, 0.95) !important;
             color: #064e3b !important;
@@ -268,7 +303,9 @@ def inject_custom_styles():
             font-weight: 500 !important;
         }
 
-        /* SEÇÕES DE INFORMAÇÃO */
+        /* ================================
+           SEÇÕES DE INFORMAÇÃO
+        ================================= */
         .info-section {
             background: rgba(6, 78, 59, 0.4);
             padding: 1.5rem;
@@ -284,7 +321,9 @@ def inject_custom_styles():
             font-weight: 700;
         }
 
-        /* ALERTAS (st.warning, st.error, etc) */
+        /* ================================
+           ALERTAS (st.warning, st.error, etc)
+        ================================= */
         .stAlert > div {
             border-radius: 12px !important;
             border: none !important;
@@ -292,12 +331,10 @@ def inject_custom_styles():
         }
 
         .stAlert p {
-             color: white !important; /* Força o texto dentro de alertas a ser branco */
+             color: white !important;
         }
-
     </style>
     """, unsafe_allow_html=True)
-
 
 
 # --- INICIALIZAÇÃO DA SESSÃO ---
