@@ -79,262 +79,129 @@ def append_row_to_sheet(sheet_id, sheet_name, row_list):
 def inject_custom_styles():
     st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        /* ================================
-           RESET E FUNDO PRINCIPAL
-        ================================= */
-        html, body, .stApp {
-            background-color: #064e3b !important; /* Cor base sólida */
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
-            font-family: 'Inter', sans-serif !important;
-            min-height: 100vh !important;
-            position: relative !important;
-        }
+    /* -------------------------
+       1) FUNDO PRINCIPAL (FORÇA)
+       ------------------------- */
+    html, body, .stApp, div[data-testid="stAppViewContainer"], div[data-testid="stAppViewContainer"] > .main {
+        background-color: #064e3b !important;
+        background-image:
+            radial-gradient(circle at 20% 80%, rgba(16,185,129,0.07) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(5,150,105,0.06) 0%, transparent 50%),
+            linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
+        background-attachment: fixed !important;
+        background-repeat: no-repeat !important;
+        min-height: 100vh !important;
+        position: relative !important;
+    }
 
-        /* Evitar que containers internos fiquem com fundo sólido */
-        .block-container {
-            background: transparent !important;
-        }
+    /* Garante que área principal do Streamlit é transparente para deixar o gradiente visível */
+    div[data-testid="stAppViewContainer"] .main, 
+    div[data-testid="stAppViewContainer"] .block-container,
+    .reportview-container .main, 
+    .css-1d391kg, /* fallback para algumas versões */
+    section.main {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
 
-        /* ================================
-           TEXTURA SOBRE O FUNDO
-        ================================= */
-        body .stApp::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 50px,
-                    rgba(255, 255, 255, 0.015) 50px,
-                    rgba(255, 255, 255, 0.015) 52px
-                ) !important;
-            pointer-events: none;
-            z-index: 0;
-        }
+    /* Remove/neutraliza qualquer background inline dentro do app (aplica apenas ao app) */
+    div[data-testid="stAppViewContainer"] *[style*="background"] {
+        background-image: none !important;
+        background-color: transparent !important;
+    }
 
-        /* ================================
-           ESCONDER ELEMENTOS PADRÃO
-        ================================= */
-        header[data-testid="stHeader"] { display: none !important; }
-        .stDeployButton { display: none !important; }
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
-
-        /* ================================
-           CONTAINER PRINCIPAL
-        ================================= */
-        .main-container {
-            padding: 1rem 2.5rem 2.5rem 2.5rem;
-            max-width: 900px;
-            margin: 0.5rem auto 2rem auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* TIPOGRAFIA */
-        .main-container h1, .main-container h2, .main-container h3, 
-        .main-container p, .main-container div, .main-container li, .main-container label {
-            color: white !important;
-        }
-
-        .main-container h1 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .main-container h2 {
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        /* ================================
-           HEADER DO QUIZ - BANNER SIPAT
-        ================================= */
-        .quiz-header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 2rem;
-            box-shadow: 
-                0 15px 35px rgba(5, 150, 105, 0.4),
-                0 5px 15px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efeito de brilho no header */
-        .quiz-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
+    /* -------------------------
+       2) TEXTURA (leve)
+       ------------------------- */
+    div[data-testid="stAppViewContainer"]::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        background-image:
+            repeating-linear-gradient(
                 45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
+                transparent,
+                transparent 50px,
+                rgba(255,255,255,0.012) 50px,
+                rgba(255,255,255,0.012) 52px
             );
-            transform: rotate(-45deg);
-            animation: shimmer 3s infinite;
-        }
+        mix-blend-mode: overlay;
+    }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(-45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(-45deg); }
-        }
+    /* -------------------------
+       3) CAMADA DE CONTEÚDO
+       ------------------------- */
+    /* garante que conteúdos fiquem acima do background */
+    div[data-testid="stAppViewContainer"] > .main, 
+    div[data-testid="stAppViewContainer"] .block-container {
+        position: relative !important;
+        z-index: 1 !important;
+    }
 
-        .quiz-header h1, .quiz-header h2 {
-            position: relative;
-            z-index: 2;
-        }
+    /* -------------------------
+       4) HEADER / FOOTER / MENU
+       ------------------------- */
+    header[data-testid="stHeader"], #MainMenu, footer, .stDeployButton {
+        display: none !important;
+        visibility: hidden !important;
+    }
 
-        /* Título SIPAT */
-        .sipat-title {
-            font-size: 1.8rem !important;
-            font-weight: 700 !important;
-            letter-spacing: 3px !important;
-            margin-bottom: 0.5rem !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            color: #fbbf24 !important;
-        }
+    /* -------------------------
+       5) TIPOGRAFIA E CORES
+       ------------------------- */
+    body, .stApp {
+        font-family: 'Inter', sans-serif !important;
+        color: #fff !important;
+    }
 
-        /* Título Principal */
-        .main-title {
-            font-size: 2.5rem !important;
-            font-weight: 800 !important;
-            margin: 1rem 0 !important;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    /* Forçar cor branca em textos dentro de cards/containers */
+    div[data-testid="stAppViewContainer"] .main * {
+        color: #ffffff !important;
+    }
 
-        /* Subtítulo */
-        .subtitle {
-            font-size: 1.2rem !important;
-            font-weight: 500 !important;
-            opacity: 0.95;
-            margin-top: 1rem !important;
-            line-height: 1.6;
-        }
+    /* -------------------------
+       6) BOTÕES E INPUTS (mantém legibilidade)
+       ------------------------- */
+    div.stButton > button, div.stDownloadButton > button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25) !important;
+    }
 
-        /* ================================
-           ABAS DO QUIZ
-        ================================= */
-        .stTabs [data-baseweb="tab-list"] { 
-            justify-content: center !important; 
-            border-bottom: 3px solid rgba(16, 185, 129, 0.3) !important;
-            margin-bottom: 2rem !important;
-            background: rgba(6, 78, 59, 0.3) !important;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 0.5rem !important;
-        }
+    .stTextInput input, input, textarea, select {
+        background: rgba(255,255,255,0.96) !important;
+        color: #064e3b !important;
+        border: 3px solid rgba(16,185,129,0.28) !important;
+        border-radius: 12px !important;
+    }
 
-        .stTabs [data-baseweb="tab"] p { 
-            color: rgba(255, 255, 255, 0.8) !important; 
-            font-weight: 600 !important;
-            font-size: 16px !important;
-        }
+    /* -------------------------
+       7) FALLBACKS: seletores que mudam entre versões do Streamlit
+       ------------------------- */
+    /* wildcard para classes dinâmicas que contenham "css-" */
+    div[data-testid="stAppViewContainer"] [class*="css-"] {
+        background: transparent !important;
+    }
 
-        .stTabs [data-baseweb="tab"][aria-selected="true"] p { 
-            color: white !important;
-            font-weight: 700 !important;
-        }
+    /* impede que cards aplicados pelo Streamlit tornem o fundo sólido */
+    div[data-testid="stAppViewContainer"] .stAlert, 
+    div[data-testid="stAppViewContainer"] .stExpander {
+        background: rgba(255,255,255,0.03) !important;
+        box-shadow: none !important;
+    }
 
-        /* ================================
-           BOTÕES
-        ================================= */
-        div.stButton > button, div.stDownloadButton > button {
-            color: white !important;
-            font-weight: 700 !important;
-            border-radius: 15px !important;
-            padding: 1rem 2.5rem !important;
-            font-size: 18px !important;
-            border: none !important;
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        div.stButton > button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        div.stButton > button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        /* Botão desabilitado */
-        div.stButton > button:disabled {
-            background: #94a3b8 !important;
-            color: #e2e8f0 !important;
-            transform: none !important;
-            box-shadow: none !important;
-            opacity: 0.7 !important;
-        }
-
-        /* ================================
-           INPUTS
-        ================================= */
-        .stTextInput input {
-            background: rgba(255, 255, 255, 0.95) !important;
-            color: #064e3b !important;
-            border: 3px solid rgba(16, 185, 129, 0.3) !important;
-            border-radius: 15px !important;
-            padding: 1rem 1.5rem !important;
-            font-size: 18px !important;
-            font-weight: 500 !important;
-        }
-
-        /* ================================
-           SEÇÕES DE INFORMAÇÃO
-        ================================= */
-        .info-section {
-            background: rgba(6, 78, 59, 0.4);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1rem 0;
-            border-left: 5px solid #10b981;
-            backdrop-filter: blur(5px);
-        }
-
-        .info-section h3 {
-            color: #fbbf24 !important;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        /* ================================
-           ALERTAS (st.warning, st.error, etc)
-        ================================= */
-        .stAlert > div {
-            border-radius: 12px !important;
-            border: none !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-        }
-
-        .stAlert p {
-             color: white !important;
-        }
     </style>
     """, unsafe_allow_html=True)
+
 
 
 # --- INICIALIZAÇÃO DA SESSÃO ---
