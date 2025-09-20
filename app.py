@@ -81,19 +81,19 @@ def inject_custom_styles():
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        /* RESET E CONFIGURAÇÕES GERAIS */
-        .stApp { 
+        /* RESET E CONFIGURAÇÕES GERAIS COM MAIOR ESPECIFICIDADE */
+        body .stApp { 
             background: 
                 radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
-            font-family: 'Inter', sans-serif;
+                linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
+            font-family: 'Inter', sans-serif !important;
             min-height: 100vh;
             position: relative;
         }
 
         /* TEXTURA DE SEGURANÇA */
-        .stApp::before {
+        body .stApp::before {
             content: '';
             position: fixed;
             top: 0;
@@ -107,7 +107,7 @@ def inject_custom_styles():
                     transparent 50px,
                     rgba(255, 255, 255, 0.02) 50px,
                     rgba(255, 255, 255, 0.02) 52px
-                );
+                ) !important;
             pointer-events: none;
             z-index: 0;
         }
@@ -115,8 +115,8 @@ def inject_custom_styles():
         /* ESCONDER ELEMENTOS DESNECESSÁRIOS */
         header[data-testid="stHeader"] { display: none !important; }
         .stDeployButton { display: none !important; }
-        #MainMenu { visibility: hidden; }
-        footer { visibility: hidden; }
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
 
         /* CONTAINER PRINCIPAL */
         .main-container {
@@ -127,456 +127,12 @@ def inject_custom_styles():
             z-index: 1;
         }
 
-        /* TIPOGRAFIA */
-        .main-container h1 {
-            color: white !important;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .main-container h2 {
-            color: white !important;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .main-container p, .main-container div {
+        /* TIPOGRAFIA - REGRA MAIS FORTE PARA GARANTIR A COR */
+        .main-container h1, .main-container h2, .main-container h3, 
+        .main-container p, .main-container div, .main-container li, .main-container label {
             color: white !important;
         }
 
-        /* HEADER DO QUIZ - BANNER SIPAT */
-        .quiz-header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            color: white !important;
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 2rem;
-            box-shadow: 
-                0 15px 35px rgba(5, 150, 105, 0.4),
-                0 5px 15px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* EFEITO DE BRILHO NO HEADER */
-        .quiz-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            transform: rotate(-45deg);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(-45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(-45deg); }
-        }
-
-        .quiz-header h1, .quiz-header h2 {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* TÍTULO SIPAT */
-        .sipat-title {
-            font-size: 1.8rem !important;
-            font-weight: 700 !important;
-            letter-spacing: 3px !important;
-            margin-bottom: 0.5rem !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            color: #fbbf24 !important;
-        }
-
-        /* TÍTULO PRINCIPAL */
-        .main-title {
-            font-size: 2.5rem !important;
-            font-weight: 800 !important;
-            margin: 1rem 0 !important;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* SUBTÍTULO */
-        .subtitle {
-            font-size: 1.2rem !important;
-            font-weight: 500 !important;
-            opacity: 0.95;
-            margin-top: 1rem !important;
-            line-height: 1.6;
-        }
-
-        /* ABAS ESTILO SIPAT */
-        .stTabs [data-baseweb="tab-list"] { 
-            justify-content: center; 
-            border-bottom: 3px solid rgba(16, 185, 129, 0.3);
-            margin-bottom: 2rem;
-            background: rgba(6, 78, 59, 0.3);
-            border-radius: 15px 15px 0 0;
-            padding: 0.5rem;
-        }
-
-        .stTabs [data-baseweb="tab"] {
-            height: 65px;
-            padding: 0 2.5rem;
-            border-radius: 12px;
-            margin: 0 0.5rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .stTabs [data-baseweb="tab"]:hover {
-            background: rgba(16, 185, 129, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .stTabs [data-baseweb="tab"] p { 
-            color: rgba(255, 255, 255, 0.8) !important; 
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .stTabs [data-baseweb="tab"][aria-selected="true"] { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            border-bottom: none !important;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .stTabs [data-baseweb="tab"][aria-selected="true"] p { 
-            color: white !important;
-            font-weight: 700;
-        }
-
-        /* BOTÕES PRINCIPAIS COM BRILHO */
-        div.stButton > button, div.stDownloadButton > button {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
-            color: white !important;
-            font-weight: 700;
-            border-radius: 15px;
-            padding: 1rem 2.5rem;
-            font-size: 18px;
-            border: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%;
-            box-shadow: 
-                0 8px 25px rgba(16, 185, 129, 0.4),
-                0 3px 10px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* EFEITO DE BRILHO NOS BOTÕES */
-        div.stButton > button::before, div.stDownloadButton > button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: left 0.6s;
-        }
-
-        div.stButton > button:hover, div.stDownloadButton > button:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 
-                0 15px 35px rgba(16, 185, 129, 0.6) !important,
-                0 8px 20px rgba(0, 0, 0, 0.3) !important;
-            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%) !important;
-        }
-
-        div.stButton > button:hover::before, div.stDownloadButton > button:hover::before {
-            left: 100%;
-        }
-
-        div.stButton > button:active {
-            transform: translateY(-1px) scale(0.98);
-        }
-
-        div.stButton > button:disabled {
-            background: #94a3b8 !important;
-            color: #64748b !important;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* INPUTS ESTILIZADOS */
-        .stTextInput input {
-            background: rgba(255, 255, 255, 0.95) !important;
-            color: #064e3b !important;
-            border: 3px solid rgba(16, 185, 129, 0.3) !important;
-            border-radius: 15px !important;
-            padding: 1rem 1.5rem !important;
-            font-size: 18px !important;
-            font-weight: 500 !important;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .stTextInput input:focus {
-            border-color: #10b981 !important;
-            box-shadow: 
-                0 0 0 4px rgba(16, 185, 129, 0.2) !important,
-                0 8px 25px rgba(16, 185, 129, 0.3) !important;
-            outline: none !important;
-            background: white !important;
-            transform: translateY(-2px);
-        }
-
-        .stTextInput input::placeholder {
-            color: rgba(6, 78, 59, 0.6) !important;
-            font-weight: 400;
-        }
-
-        /* CAIXA DA PERGUNTA - DESTAQUE PRINCIPAL */
-        .question-box {
-            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #10b981 100%);
-            color: white !important;
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            text-align: center;
-            margin: 2rem 0;
-            box-shadow: 
-                0 15px 40px rgba(16, 185, 129, 0.4),
-                0 5px 15px rgba(0, 0, 0, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* BRILHO NA PERGUNTA */
-        .question-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #fbbf24);
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 3s linear infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-
-        .question-box h3 {
-            color: white !important;
-            font-weight: 700;
-            font-size: 1.4rem;
-            margin: 0.5rem 0;
-            line-height: 1.4;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        /* SEÇÕES DE INFORMAÇÃO */
-        .info-section {
-            background: rgba(6, 78, 59, 0.4);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1rem 0;
-            border-left: 5px solid #10b981;
-            backdrop-filter: blur(5px);
-        }
-
-        .info-section h3 {
-            color: #fbbf24 !important;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        /* TIMER DESTAQUE */
-        .timer-display {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-            color: white !important;
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
-            text-align: center;
-            margin: 1.5rem auto;
-            display: inline-block;
-            font-size: 2rem;
-            font-weight: 800;
-            box-shadow: 
-                0 10px 30px rgba(245, 158, 11, 0.4),
-                0 4px 15px rgba(0, 0, 0, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            animation: pulse 2s infinite;
-            letter-spacing: 2px;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* TIMER CRÍTICO (< 10s) */
-        .timer-critical {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%) !important;
-            animation: urgentPulse 1s infinite !important;
-        }
-
-        @keyframes urgentPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 15px 40px rgba(220, 38, 38, 0.8); }
-        }
-
-        /* BOTÕES DE RESPOSTA */
-        .answer-btn {
-            margin-bottom: 1rem;
-        }
-
-        .answer-btn button {
-            color: white !important;
-            font-size: 18px !important;
-            font-weight: 600 !important;
-            height: 80px !important;
-            border-radius: 16px !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
-        }
-
-        .answer-btn button:hover:not(:disabled) {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important;
-        }
-
-        .red button { 
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; 
-        }
-        .blue button { 
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; 
-        }
-        .yellow button { 
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; 
-        }
-        .green button { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
-        }
-
-        /* ALERTAS */
-        .stAlert > div {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        /* DATAFRAME */
-        .stDataFrame {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            .main-container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-
-            .quiz-header {
-                padding: 1.5rem;
-            }
-
-            .answer-btn button {
-                height: 70px !important;
-                font-size: 16px !important;
-            }
-        }
-
-        /* ANIMAÇÕES */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .main-container {
-            animation: fadeIn 0.6s ease-out;
-        }
-    </style>
-    """, unsafe_allow_html=True)# --- ESTILO CSS MELHORADO ---
-def inject_custom_styles():
-    st.markdown("""
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        /* RESET E CONFIGURAÇÕES GERAIS */
-        .stApp { 
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* TEXTURA DE SEGURANÇA */
-        .stApp::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 50px,
-                    rgba(255, 255, 255, 0.02) 50px,
-                    rgba(255, 255, 255, 0.02) 52px
-                );
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ESCONDER ELEMENTOS DESNECESSÁRIOS */
-        header[data-testid="stHeader"] { display: none !important; }
-        .stDeployButton { display: none !important; }
-        #MainMenu { visibility: hidden; }
-        footer { visibility: hidden; }
-
-        /* CONTAINER PRINCIPAL */
-        .main-container {
-            padding: 1rem 2.5rem 2.5rem 2.5rem;
-            max-width: 900px;
-            margin: 0.5rem auto 2rem auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* TIPOGRAFIA */
-        .main-container h1, .main-container h2, .main-container h3, .main-container p, .main-container div {
-            color: white !important; /* CORREÇÃO APLICADA: garante que todo texto seja branco por padrão */
-        }
-        
         .main-container h1 {
             font-weight: 700;
             margin-bottom: 1rem;
@@ -663,106 +219,42 @@ def inject_custom_styles():
 
         /* ABAS ESTILO SIPAT */
         .stTabs [data-baseweb="tab-list"] { 
-            justify-content: center; 
-            border-bottom: 3px solid rgba(16, 185, 129, 0.3);
-            margin-bottom: 2rem;
-            background: rgba(6, 78, 59, 0.3);
-            border-radius: 15px 15px 0 0;
-            padding: 0.5rem;
-        }
-
-        .stTabs [data-baseweb="tab"] {
-            height: 65px;
-            padding: 0 2.5rem;
-            border-radius: 12px;
-            margin: 0 0.5rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .stTabs [data-baseweb="tab"]:hover {
-            background: rgba(16, 185, 129, 0.2);
-            transform: translateY(-2px);
+            justify-content: center !important; 
+            border-bottom: 3px solid rgba(16, 185, 129, 0.3) !important;
+            margin-bottom: 2rem !important;
+            background: rgba(6, 78, 59, 0.3) !important;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 0.5rem !important;
         }
 
         .stTabs [data-baseweb="tab"] p { 
             color: rgba(255, 255, 255, 0.8) !important; 
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .stTabs [data-baseweb="tab"][aria-selected="true"] { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            border-bottom: none !important;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+            font-weight: 600 !important;
+            font-size: 16px !important;
         }
 
         .stTabs [data-baseweb="tab"][aria-selected="true"] p { 
             color: white !important;
-            font-weight: 700;
+            font-weight: 700 !important;
         }
 
         /* BOTÕES PRINCIPAIS COM BRILHO */
         div.stButton > button, div.stDownloadButton > button {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
             color: white !important;
-            font-weight: 700;
-            border-radius: 15px;
-            padding: 1rem 2.5rem;
-            font-size: 18px;
-            border: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%;
-            box-shadow: 
-                0 8px 25px rgba(16, 185, 129, 0.4),
-                0 3px 10px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 700 !important;
+            border-radius: 15px !important;
+            padding: 1rem 2.5rem !important;
+            font-size: 18px !important;
+            border: none !important;
         }
 
-        /* EFEITO DE BRILHO NOS BOTÕES */
-        div.stButton > button::before, div.stDownloadButton > button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: left 0.6s;
-        }
-
-        div.stButton > button:hover, div.stDownloadButton > button:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 
-                0 15px 35px rgba(16, 185, 129, 0.6) !important,
-                0 8px 20px rgba(0, 0, 0, 0.3) !important;
-            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%) !important;
-        }
-
-        div.stButton > button:hover::before, div.stDownloadButton > button:hover::before {
-            left: 100%;
-        }
-
-        div.stButton > button:active {
-            transform: translateY(-1px) scale(0.98);
-        }
-
-        /* BOTÃO DESABILITADO - CORREÇÃO DE COR DO TEXTO */
+        /* BOTÃO DESABILITADO */
         div.stButton > button:disabled {
             background: #94a3b8 !important;
-            color: #e2e8f0 !important; /* CORREÇÃO APLICADA: Texto mais claro e visível */
-            transform: none;
-            box-shadow: none;
-            opacity: 0.7;
+            color: #e2e8f0 !important;
+            transform: none !important;
+            box-shadow: none !important;
+            opacity: 0.7 !important;
         }
 
         /* INPUTS ESTILIZADOS */
@@ -774,66 +266,6 @@ def inject_custom_styles():
             padding: 1rem 1.5rem !important;
             font-size: 18px !important;
             font-weight: 500 !important;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .stTextInput input:focus {
-            border-color: #10b981 !important;
-            box-shadow: 
-                0 0 0 4px rgba(16, 185, 129, 0.2) !important,
-                0 8px 25px rgba(16, 185, 129, 0.3) !important;
-            outline: none !important;
-            background: white !important;
-            transform: translateY(-2px);
-        }
-
-        .stTextInput input::placeholder {
-            color: rgba(6, 78, 59, 0.6) !important;
-            font-weight: 400;
-        }
-
-        /* CAIXA DA PERGUNTA - DESTAQUE PRINCIPAL */
-        .question-box {
-            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #10b981 100%);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            text-align: center;
-            margin: 2rem 0;
-            box-shadow: 
-                0 15px 40px rgba(16, 185, 129, 0.4),
-                0 5px 15px rgba(0, 0, 0, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* BRILHO NA PERGUNTA */
-        .question-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #fbbf24);
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 3s linear infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-
-        .question-box h3 {
-            font-weight: 700;
-            font-size: 1.4rem;
-            margin: 0.5rem 0;
-            line-height: 1.4;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         /* SEÇÕES DE INFORMAÇÃO */
@@ -847,118 +279,22 @@ def inject_custom_styles():
         }
 
         .info-section h3 {
-            color: #fbbf24 !important; /* CORREÇÃO: Título da seção em amarelo */
+            color: #fbbf24 !important;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
-        /* TIMER DESTAQUE */
-        .timer-display {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
-            text-align: center;
-            margin: 1.5rem auto;
-            display: inline-block;
-            font-size: 2rem;
-            font-weight: 800;
-            box-shadow: 
-                0 10px 30px rgba(245, 158, 11, 0.4),
-                0 4px 15px rgba(0, 0, 0, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            animation: pulse 2s infinite;
-            letter-spacing: 2px;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* TIMER CRÍTICO (< 10s) */
-        .timer-critical {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%) !important;
-            animation: urgentPulse 1s infinite !important;
-        }
-
-        @keyframes urgentPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 15px 40px rgba(220, 38, 38, 0.8); }
-        }
-
-        /* BOTÕES DE RESPOSTA */
-        .answer-btn {
-            margin-bottom: 1rem;
-        }
-
-        .answer-btn button {
-            font-size: 18px !important;
-            font-weight: 600 !important;
-            height: 80px !important;
-            border-radius: 16px !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
-        }
-
-        .answer-btn button:hover:not(:disabled) {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important;
-        }
-
-        .red button { 
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; 
-        }
-        .blue button { 
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; 
-        }
-        .yellow button { 
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; 
-        }
-        .green button { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
-        }
-
-        /* ALERTAS */
+        /* ALERTAS (st.warning, st.error, etc) */
         .stAlert > div {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
         }
 
-        /* DATAFRAME */
-        .stDataFrame {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .stAlert p {
+             color: white !important; /* Força o texto dentro de alertas a ser branco */
         }
 
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            .main-container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-
-            .quiz-header {
-                padding: 1.5rem;
-            }
-
-            .answer-btn button {
-                height: 70px !important;
-                font-size: 16px !important;
-            }
-        }
-
-        /* ANIMAÇÕES */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .main-container {
-            animation: fadeIn 0.6s ease-out;
-        }
     </style>
     """, unsafe_allow_html=True)
 
