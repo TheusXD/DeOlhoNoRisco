@@ -523,6 +523,7 @@ def inject_custom_styles():
     """, unsafe_allow_html=True)
 
 
+
 # --- INICIALIZAÇÃO DA SESSÃO ---
 if 'initialized' not in st.session_state:
     st.session_state.initialized = True
