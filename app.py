@@ -579,6 +579,37 @@ if 'initialized' not in st.session_state:
     st.session_state.quiz_enabled = True  # Controle do quiz
 
 
+# --- FUNÇÕES DE CONTROLE DE PARTICIPAÇÃO ---
+def check_user_participation(name):
+    """Verifica se o usuário já participou do quiz"""
+    try:
+        ranking_df = load_data(st.session_state.sheet_id, "Ranking")
+        if not ranking_df.empty and 'nome' in ranking_df.columns:
+            # Normalizar nomes para comparação (minúsculo, sem espaços extras)
+            existing_names = ranking_df['nome'].str.lower().str.strip()
+            user_name = name.lower().strip()
+            return user_name in existing_names.values
+        return False
+    except Exception as e:
+        return False
+
+
+def get_user_score(name):
+    """Recupera a pontuação do usuário se ele já participou"""
+    try:
+        ranking_df = load_data(st.session_state.sheet_id, "Ranking")
+        if not ranking_df.empty and 'nome' in ranking_df.columns:
+            user_row = ranking_df[ranking_df['nome'].str.lower().str.strip() == name.lower().strip()]
+            if not user_row.empty:
+                return {
+                    'score': user_row.iloc[0]['pontuacao'],
+                    'time': user_row.iloc[0].get('tempo_total', 0)
+                }
+        return None
+    except Exception as e:
+        return None
+
+
 # --- FUNÇÕES DE CONTROLE DO QUIZ ---
 def load_quiz_status():
     """Carrega o status do quiz da planilha"""
@@ -634,22 +665,30 @@ def start_quiz():
         return
 
     name = st.session_state.player_name_input
-    if name:
-        st.session_state.player_name = name.strip()
-        questions_df = load_data(st.session_state.sheet_id, st.session_state.questions_tab)
-        if not questions_df.empty and not questions_df['pergunta'].isnull().all():
-            st.session_state.questions = questions_df.dropna(subset=['pergunta']).to_dict('records')
-            st.session_state.current_question = 0
-            st.session_state.score = 0
-            st.session_state.total_time = 0.0
-            st.session_state.feedback_message = None
-            st.session_state.answer_submitted = False
-            st.session_state.timer = QUESTION_TIMER
-            st.session_state.screen = 'quiz'
-        else:
-            st.error("Nenhuma pergunta encontrada.")
-    else:
+    if not name:
         st.warning("Por favor, digite seu nome.")
+        return
+
+    # Verificar se o usuário já participou
+    if check_user_participation(name):
+        st.error(
+            "🚫 Você já participou do quiz. Em caso de erro, verificar com a administração para uma nova tentativa.")
+        return
+
+    # Prosseguir com o quiz se passou em todas as verificações
+    st.session_state.player_name = name.strip()
+    questions_df = load_data(st.session_state.sheet_id, st.session_state.questions_tab)
+    if not questions_df.empty and not questions_df['pergunta'].isnull().all():
+        st.session_state.questions = questions_df.dropna(subset=['pergunta']).to_dict('records')
+        st.session_state.current_question = 0
+        st.session_state.score = 0
+        st.session_state.total_time = 0.0
+        st.session_state.feedback_message = None
+        st.session_state.answer_submitted = False
+        st.session_state.timer = QUESTION_TIMER
+        st.session_state.screen = 'quiz'
+    else:
+        st.error("Nenhuma pergunta encontrada.")
 
 
 def next_question():
@@ -725,6 +764,66 @@ def show_admin_panel():
             st.warning("⚠️ Planilha 'Config' não encontrada")
             st.write("👆 Use os botões acima para criar a configuração inicial")
             st.write(f"Detalhes do erro: {str(e)}")
+
+    st.markdown("---")
+
+    # CONTROLE DE PARTICIPAÇÕES
+    st.header("👥 Gerenciar Participações")
+
+    ranking_df = load_data(st.session_state.sheet_id, "Ranking")
+    if not ranking_df.empty:
+        total_participants = len(ranking_df)
+        st.metric("Total de Participantes", total_participants)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Resetar um participante específico
+            st.subheader("🔄 Permitir Nova Tentativa")
+            st.write("Digite o nome exato para permitir que a pessoa jogue novamente:")
+
+            participant_name = st.text_input("Nome do participante:", placeholder="Nome completo...")
+
+            if st.button("🔓 Permitir Nova Tentativa"):
+                if participant_name and check_user_participation(participant_name):
+                    try:
+                        # Remover participante do ranking
+                        updated_df = ranking_df[
+                            ranking_df['nome'].str.lower().str.strip() != participant_name.lower().strip()]
+                        if update_sheet_from_df(st.session_state.sheet_id, "Ranking", updated_df):
+                            st.success(f"✅ {participant_name} pode jogar novamente!")
+                            st.cache_data.clear()
+                        else:
+                            st.error("❌ Erro ao atualizar ranking.")
+                    except Exception as e:
+                        st.error(f"Erro: {e}")
+                elif participant_name:
+                    st.warning("⚠️ Participante não encontrado no ranking.")
+                else:
+                    st.warning("⚠️ Digite um nome válido.")
+
+        with col2:
+            # Resetar tudo
+            st.subheader("⚠️ Reset Completo")
+            st.write("**ATENÇÃO:** Isso apagará todos os resultados!")
+
+            confirm_reset = st.checkbox("Confirmo que quero resetar TUDO")
+
+            if st.button("💣 RESETAR RANKING COMPLETO", type="secondary", disabled=not confirm_reset):
+                if confirm_reset:
+                    empty_df = pd.DataFrame(columns=['nome', 'pontuacao', 'tempo_total'])
+                    if update_sheet_from_df(st.session_state.sheet_id, "Ranking", empty_df):
+                        st.success("✅ Ranking resetado! Todos podem jogar novamente.")
+                        st.cache_data.clear()
+                    else:
+                        st.error("❌ Erro ao resetar ranking.")
+
+        # Lista de participantes
+        with st.expander("📋 Lista de Participantes", expanded=False):
+            st.dataframe(ranking_df[['nome', 'pontuacao', 'tempo_total']], use_container_width=True)
+
+    else:
+        st.info("📊 Nenhum participante ainda.")
 
     st.markdown("---")
 
