@@ -909,7 +909,7 @@ def show_home():
 
             # Input desabilitado
             st.text_input(
-                "Digite seu nome para começar:",
+                "Digite seu nome completo para começar:",
                 key="player_name_input",
                 placeholder="Aguarde a liberação do quiz...",
                 disabled=True
@@ -925,7 +925,7 @@ def show_home():
             """, unsafe_allow_html=True)
 
             st.text_input(
-                "Digite seu nome para começar:",
+                "Digite seu nome completo para começar:",
                 key="player_name_input",
                 placeholder="Seu nome aqui..."
             )
